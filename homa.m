@@ -11,7 +11,7 @@ Em = 0.1; % Requisito de erro para mMTC
 n_outage = [];
 num_bits = 1e4;
 
-H = sqrt(10^(Gamma_M/10))*((randn(Am,num_bits))+1i*randn(Am,num_bits)); % Gera vetor H de canais para cada usuário mMTC
+H = sqrt(10^(Gamma_M/10))*((randn(Am,num_bits))+1i*randn(Am,num_bits))/sqrt(2); % Gera vetor H de canais para cada usuário mMTC
 %H = normrnd(0,sqrt(Gamma_M),Am)+i*normrnd(0,sqrt(Gamma_M),Am);
 H_index = [1:1:Am];
 G = abs(H).^2;
@@ -20,7 +20,7 @@ y = [];
 x = zeros(Am,num_bits);
 
 for i = 1:Am
-    z = complex(randn(1,num_bits),randn(1,num_bits)); % Gera vetor de ruído gaussiano
+    z = complex(randn(1,num_bits),randn(1,num_bits))/sqrt(2); % Gera vetor de ruído gaussiano
     x(i,:) = round(rand(1,num_bits)); % Gera vetor de sinal transmitido para cada device mMTC
     y(i,:) = H(i,:).*x(i,:) + z; % Sinal recebido
 end
@@ -41,7 +41,6 @@ n_ok = [];
                     ok = ok + 1;
                 else
                     Dm = Dm + 1;
-                    break; % quando der outage, parar o processo
                 end
             end
             n_ok = [n_ok ok];
