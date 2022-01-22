@@ -11,7 +11,7 @@ Em = 0.1; % Requisito de erro para mMTC
 n_outage = [];
 num_bits = 1e4;
 
-H = sqrt(1/10^(Gamma_M/10))*(randn(Am,num_bits))+1i*randn(Am,num_bits); % Gera vetor H de canais para cada usuário mMTC
+H = sqrt((10^(Gamma_M/10)))*(randn(Am,num_bits))+1i*randn(Am,num_bits); % Gera vetor H de canais para cada usuário mMTC
 %H = normrnd(0,sqrt(Gamma_M),Am)+i*normrnd(0,sqrt(Gamma_M),Am);
 H_index = [1:1:Am];
 G = abs(H).^2;
@@ -26,24 +26,26 @@ for i = 1:Am
     y(i,:) = H(i,:).*x(i,:) + z; % Sinal recebido
 end
 
+n_ok = [];
     for b = 1:num_bits
+         
+            G_sorted = sort(G(:,b),'descend');
         
-            G_sorted = sort(G(:,num_bits),'descend');
-            
-            
             Dm = 0; % Numero de devices em outage
             ok = 0;
             for j = 1:Am
+                
                 G_sum = sum(G_sorted(j+1:Am,1));
                 SINR(j,b) = G_sorted(j)/(1+G_sum); % Para a lista de Am devices, decodificar realização do melhor canal para pior
                 
                 if log2(1 + SINR(j,b)) >= Rm
-                ok = ok + 1;
+                    ok = ok + 1;
                 else
                     Dm = Dm + 1;
                 end
             end
+            n_ok = [n_ok ok];
             n_outage = [n_outage Dm];
     end
 
-lambda_m = mean(n_outage)/Em % Média das realizações
+lambda_m = ok
