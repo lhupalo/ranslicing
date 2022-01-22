@@ -16,43 +16,45 @@ rBf = log2(1 + GBf_tar);
 %% mMTC
 
 % Inicializa parâmetros da simulação
-Am = 150; % Numero de devices mMTC
-SNR_M = 5; % Coeficiente de canal mMTC
+SNR_M_db = 5; % Coeficiente de canal mMTC em dB
+SNR_M = 10^(SNR_M_db/10); 
 Rm = 0.04; % Taxa de transmissão mMTC
 Em = 0.1; % Requisito de erro para mMTC
 
-iter = 10e3;
-
-% Inicializa variaveis
-n_outage = [];
+nmax = 200;
 
 
-SINR = [];
-for i = 1:iter
-
-    H = sqrt(10^(SNR_M/10))*((randn(Am,1))+1i*randn(Am,1))/sqrt(2); % Gera vetor H de canais para cada usuário mMTC
-    %H = normrnd(0,sqrt(Gamma_M),Am)+i*normrnd(0,sqrt(Gamma_M),Am);
-    G_dB = abs(H).^2;
-    G = 10.^(G_dB/10);
+h = [];
+SNR_inst = [];
+SRNsum = 0;
+for lambda = 1:nmax
     
-    ok = 0;
-    Dm = 0;
-    n_outage = [];
-    n_ok = [];
-    for j = 1:Am
-
-        G_sorted = sort(G,'descend');
-
-        Gsum = sum(G_sorted(j+1:Am,1));
-        SINR(j,1) = G_sorted(j,1)/(1+Gsum);
-        
-        if log2(1 + SINR(j,1)) <= Rm
-            ok = ok + 1;
-        else
-            Dm = Am - ok;
-        end
+    for j = 1:lambda
+        h(j,1) = sqrt(0.5)*abs(randn+1i*randn);
+        SNR_inst(j,1) = SNR_M*h(j)^2;
+        instSNRsorted = sort(SNR_inst,'descend');
     end
-    n_ok = [n_ok ok];
-    n_outage = [n_outage Dm];
+    
+    if lambda <= 1
+        SINR = instSNRsorted(lambda,1)/(1+instSNRsorted(lambda,1));
+        
+        if log2(1 + SINR) < Rm
+           break
+           lambda_max = lambda;
+       end
+    else
+        for k = 1:lambda
+           SNRsum = sum(instSNRsorted(k+1:lambda,1));
+           SINR(k,1) = instSNRsorted(k,1)/(1+SNRsum);
+        end
+        Error = mean(log2(1+SINR) < Rm);
+        EDm = sum(log2(1+SINR) < Rm);
+        
+        if Error > Em
+            lambda_max = lambda;
+            break;
+        end
+        
+    end
+    
 end
-lambda = mean(ok)
