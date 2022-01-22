@@ -1,54 +1,56 @@
 clear
 clc
 
+%% eMBB
+
+SNR_B_dB = 25;
+eb = 0.001;
+
+SNR_B = 10^(SNR_B_dB/10);
+GBf_min = SNR_B*log(1/(1-eb));
+
+GBf_tar = SNR_B/(expint(GBf_min/SNR_B));
+
+rBf = log2(1 + GBf_tar);
+
+%% mMTC
+
 % Inicializa parâmetros da simulação
 Am = 150; % Numero de devices mMTC
-Gamma_M = 5; % Coeficiente de canal mMTC
+SNR_M = 5; % Coeficiente de canal mMTC
 Rm = 0.04; % Taxa de transmissão mMTC
 Em = 0.1; % Requisito de erro para mMTC
 
+iter = 10e3;
+
 % Inicializa variaveis
 n_outage = [];
-num_bits = 1e4;
 
-H = sqrt(10^(Gamma_M/10))*((randn(Am,num_bits))+1i*randn(Am,num_bits))/sqrt(2); % Gera vetor H de canais para cada usuário mMTC
-%H = normrnd(0,sqrt(Gamma_M),Am)+i*normrnd(0,sqrt(Gamma_M),Am);
-H_index = [1:1:Am];
-G = abs(H).^2;
 
-y = [];
-x = zeros(Am,num_bits);
+for i = 1:iter
 
-for i = 1:Am
-    z = complex(randn(1,num_bits),randn(1,num_bits))/sqrt(2); % Gera vetor de ruído gaussiano
-    x(i,:) = round(rand(1,num_bits)); % Gera vetor de sinal transmitido para cada device mMTC
-    y(i,:) = H(i,:).*x(i,:) + z; % Sinal recebido
-end
+    H = sqrt(10^(SNR_M/10))*((randn(Am,1))+1i*randn(Am,1))/sqrt(2); % Gera vetor H de canais para cada usuário mMTC
+    %H = normrnd(0,sqrt(Gamma_M),Am)+i*normrnd(0,sqrt(Gamma_M),Am);
+    H_index = [1:1:Am];
+    G = abs(H).^2;
+    
+    
+    ok = 0;
+    Dm = 0;
+    for j = 1:Am
 
-n_ok = [];
-    for b = 1:num_bits
-         
-            G_sorted = sort(G(:,b),'descend');
+        G_sorted = sort(G,'descend');
+
+        Gsum = sum(G_sorted(j+1:Am,1));
+        SINR = G_sorted(j,1)/(1+Gsum);
         
-            Dm = 0; % Numero de devices em outage
-            ok = 0;
-            for j = 1:Am
-                
-                G_sum = sum(G_sorted(j+1:Am,1));
-                SINR(j,b) = G_sorted(j)/(1+G_sum); % Para a lista de Am devices, decodificar realização do melhor canal para pior
-                
-                if log2(1 + SINR(j,b)) >= Rm
-                    ok = ok + 1;
-                else
-                    Dm = Dm + 1;
-                end
-            end
-            n_ok = [n_ok ok];
-            n_outage = [n_outage Dm];
+        if log2(1 + SINR) <= Rm
+            ok = ok + 1;
+        else
+            Dm = Am - ok;
+            break;
+        end
+        
     end
-
     
-% Dúvida: onde entra o requisito de erro no final?    
-    
-lambda_m = mean(n_ok);
-lambda_m
+end
