@@ -24,11 +24,19 @@ Rm = 0.04; % Taxa de transmissão mMTC
 Em = 0.1; % Requisito de erro para mMTC
 
 nmax = 200; % Número máximo de iterações (inicia em 1 device até quantos suportarem o requisito de erro mMTC)
+niter = 1e3;
+lmax = [];
+noutage = [];
 
+
+for g = 1:niter
 
 h = [];
 SNR_inst = [];
 SRNsum = 0;
+SINR = [];
+Error = 0;
+EDm = 0;
 for lambda_m = 1:nmax
     
     lambda = poissrnd(lambda_m); % Sorteio do suposto número de devices ativos neste momento
@@ -55,4 +63,11 @@ for lambda_m = 1:nmax
         end
     end
 end
-fprintf('lambda = %d, EDm = %d \n\n',lambda_max,EDm)
+    lmax(g) = lambda_max;
+    noutage(g) = EDm;
+end
+
+max_devices = ceil(mean(lmax));
+outage_mean = ceil(mean(noutage));
+
+fprintf('lambda = %d, EDm = %d \n\n',max_devices,outage_mean)
