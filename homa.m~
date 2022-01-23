@@ -40,18 +40,13 @@ for lambda_m = 1:nmax
     end
     
     if lambda <= 1 % Condiçao para 1 device ativo apenas (muda um pouco o fluxo, mas nesse caso nunca dá outage)
-        SINR = instSNRsorted(lambda,1)/(1+instSNRsorted(lambda,1));
         
-        if log2(1 + SINR) < Rm
-           break
-           lambda_max = lambda;
-       end
     else
         for k = 1:lambda                                % Loop de decodificação conforme ordem de qualidade das SNR instantâneas de cada device
            SNRsum = sum(instSNRsorted(k+1:lambda,1));   % Soma das SNRs instantâneas dos devices que ainda faltam ser decodificados e que causam interferência
            SINR(k,1) = instSNRsorted(k,1)/(1+SNRsum);   % Cálculo da SINR do device atual que está sendo decodificado
         end
-        Error = mean(log2(1+SINR) < Rm);                % 
+        Error = mean(log2(1+SINR) < Rm);                % Teste quantas SINRs foram calculadas
         EDm = sum(log2(1+SINR) < Rm);
         
         if Error > Em
@@ -60,4 +55,4 @@ for lambda_m = 1:nmax
         end
     end
 end
-fprintf('\lambda_M = %d, EDm = %d')
+fprintf('lambda = %d, EDm = %d \n\n',lambda_max,EDm)

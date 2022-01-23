@@ -39,18 +39,18 @@ for lambda_m = 1:nmax
         instSNRsorted = sort(SNR_inst,'descend'); % Ordenação das SNR instantâneas vistas pela BS, da melhor para a pior, para a decodificação
     end
     
-    if lambda <= 1 % Condiçao para 1 device ativo apenas (muda um pouco o fluxo, mas nesse caso nunca dá outage)
+    if lambda <= 1 % Condiçao para 1 device ativo apenas (só pra não dar erro, nesse caso nunca dá outage. Não consegui bolar algo diferente disso)
         
     else
         for k = 1:lambda                                % Loop de decodificação conforme ordem de qualidade das SNR instantâneas de cada device
            SNRsum = sum(instSNRsorted(k+1:lambda,1));   % Soma das SNRs instantâneas dos devices que ainda faltam ser decodificados e que causam interferência
            SINR(k,1) = instSNRsorted(k,1)/(1+SNRsum);   % Cálculo da SINR do device atual que está sendo decodificado
         end
-        Error = mean(log2(1+SINR) < Rm);                % 
-        EDm = sum(log2(1+SINR) < Rm);
+        Error = mean(log2(1+SINR) < Rm);                % Teste de quantas SINRs foram calculadas e deram outage
+        EDm = sum(log2(1+SINR) < Rm);                   % Soma da quantidade de devices em outage
         
-        if Error > Em
-            lambda_max = lambda;
+        if Error > Em                                   % Testa se o erro obtido para o número suposto de devices é maior que o requisito de erro mMTC
+            lambda_max = lambda;                        % Se sim, salva variável e sai do loop
             break;
         end
     end
