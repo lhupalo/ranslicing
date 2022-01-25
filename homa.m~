@@ -1,36 +1,34 @@
-clear
+clear all;
 clc
 
-%% eMBB
+%% eMBB - Enhanced Mobile BroadBand 
 
-SNR_B_dB = 25;
-eb = 0.001;
+SNR_B_dB = 25;  % Average of SNR in dB
+eb = 0.001;     % Maximum error accepted for eMBB service
 
 SNR_B = 10^(SNR_B_dB/10);
-GBf_min = SNR_B*log(1/(1-eb)); % SNR mínima para transmissão
+GBf_min = SNR_B*log(1/(1-eb)); % Minimum value of SNR that allow the device to transmit
 
-GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % SNR alvo de transmissão
+GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
 
-rBf = log2(1 + GBf_tar); % Taxa eMBB ortogonal
+rBf_orth = log2(1 + GBf_tar); % eMBB rate for Orthogonal Access
 
-%% mMTC
+%% mMTC - Massive Machine-Type Communications
+
 clear all;
 clc;
 
-% Inicializa parâmetros da simulação
-SNR_M_db = 5; % Coeficiente de canal mMTC em dB
+% Simulation parameters
+SNR_M_db = 5; % Average SNR for mMTC in dB
 SNR_M = 10^(SNR_M_db/10); 
-Rm = 0.04; % Taxa de transmissão mMTC
-Em = 0.1; % Requisito de erro para mMTC
+Rm = 0.04; % Rate for mMTC devices. Fixed to a certain value
+Em = 0.1;  % Maximum error accepted for mMTC service
 
-nmax = 200; % Número máximo de iterações (inicia em 1 device até quantos suportarem o requisito de erro mMTC)
-niter = 1e3;
+nmax = 200;  % Number of max iterations, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
+niter = 1e3; % Number of iterations each time that a certain number of devices is active simultaneously
 lmax = [];
 noutage = [];
 lambda_max = 0;
-
-
-
 
 for lambda_m = 1:nmax
     
@@ -41,41 +39,41 @@ for lambda_m = 1:nmax
     Error = [];
     EDm = [];
     
-    for g = 1:niter % Roda o va
+    for g = 1:niter % niter iterations for each lambda_m (supposed number of devices mMTC actives at the same time)
     
-        lambda = poissrnd(lambda_m); % Sorteio do suposto número de devices ativos neste momento
+        lambda = poissrnd(lambda_m); % The number of active devices simultaneously is Poisson distributed
 
         for j = 1:lambda
-            h(j,1) = sqrt(0.5)*abs(randn+1i*randn); % Representações de canais Rayleigh para cada device supostamente ativo
-            SNR_inst(j,1) = SNR_M*h(j)^2; % Calculo da SNR instantânea vista na BS para cada device
-            instSNRsorted = sort(SNR_inst,'descend'); % Ordenação das SNR instantâneas vistas pela BS, da melhor para a pior, para a decodificação
+            h(j,1) = sqrt(0.5)*abs(randn+1i*randn);   % One Rayleigh fading channel for each device
+            SNR_inst(j,1) = SNR_M*h(j)^2;             % Instantaneous SNR seen at the BS for each device
+            instSNRsorted = sort(SNR_inst,'descend'); % Descending instantaneous SNRs seen at the BS to decode properly
         end
         
         if lambda == 0
             break;
-        elseif lambda <= 1 % Condiçao para 1 device ativo apenas (só pra não dar erro, nesse caso nunca dá outage. Não consegui bolar algo diferente disso)
+        elseif lambda <= 1
             SINR =  instSNRsorted;
         else
-            for k = 1:lambda                                % Loop de decodificação conforme ordem de qualidade das SNR instantâneas de cada device
-               SNRsum = sum(instSNRsorted(k+1:lambda,1));   % Soma das SNRs instantâneas dos devices que ainda faltam ser decodificados e que causam interferência
-               SINR(k,1) = instSNRsorted(k,1)/(1+SNRsum);   % Cálculo da SINR do device atual que está sendo decodificado
+            for k = 1:lambda                                % Decode the devices according to the best inst. SNR to the poor inst. SNR. SIC is implicit
+               SNRsum = sum(instSNRsorted(k+1:lambda,1));   % 
+               SINR(k,1) = instSNRsorted(k,1)/(1+SNRsum);   % SINR of the present device (which is being decoded)
             end
         end
         
-        if lambda == 0
+        if lambda == 0   
             Error(g) = 0;
             EDm(g) = 0;
         else
-            Error(g) = mean(log2(1+SINR) < Rm);
-            EDm(g) = sum(log2(1+SINR) < Rm);
+            Error(g) = mean(log2(1+SINR) < Rm); % Error taken on the g-esim iteration to a supposed lambda_m
+            EDm(g) = sum(log2(1+SINR) < Rm); % Valor de devices em outage para a g-ésima iteração de um mesmo suposto lambda_m
         end
     
     end
-    if mean(Error) > Em                  % Testa se o erro obtido para n iterações do número suposto de devices é maior que o requisito de erro mMTC
-        lmax = lambda_m;                 % Se sim, salva variável e sai do loop
-        noutage = mean(EDm);
+    if mean(Error) > Em   % Testa a média do erro de todas as iterações para um suposto lambda_m
+        lmax = lambda_m;     % Se o erro exceder o valor do requisito de serviço, salva o lambda_m e a quantidade
+        noutage = mean(EDm); % de devices em outage máximas que o canal suporta
         break;
-    end
+    end % caso negativo, segue o fluxo e para o próximo valor de lambda_m suposto
    
 end
 
