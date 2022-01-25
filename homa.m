@@ -1,6 +1,12 @@
 clear all;
 clc
 
+alpha = linspace(0,0.99,11);
+rBf = zeros(length(alpha));
+max_devices = zeros(length(alpha));
+outage_mean = zeros(length(alpha));
+for main = 1:length(alpha)
+
 %% eMBB - Enhanced Mobile BroadBand 
 
 SNR_B_dB = 25;  % Average of SNR in dB
@@ -11,12 +17,10 @@ GBf_min = SNR_B*log(1/(1-eb)); % Minimum value of SNR that allow the device to t
 
 GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
 
-rBf_orth = log2(1 + GBf_tar); % eMBB rate for Orthogonal Access
+rBf_orth = log2(1 + GBf_tar); % Maximum eMBB rate for Orthogonal Access
+rBf(main) = alpha(main)*rBf_orth;
 
 %% mMTC - Massive Machine-Type Communications
-
-clear all;
-clc;
 
 % Simulation parameters
 SNR_M_db = 5; % Average SNR for mMTC in dB
@@ -26,7 +30,7 @@ Em = 0.1;  % Maximum error accepted for mMTC service
 
 nmax = 200;  % Number of max iterations, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
 niter = 1e4; % Number of iterations each time that a certain number of devices is active simultaneously
-lmax = [];
+lmax = 0;
 noutage = [];
 lambda_max = 0;
 
@@ -64,8 +68,8 @@ for lambda_m = 1:nmax
             Error(g) = 0;
             EDm(g) = 0;
         else
-            Error(g) = mean(log2(1+SINR) < Rm); % Error taken on the g-th iteration to a supposed lambda_m
-            EDm(g) = sum(log2(1+SINR) < Rm);    % Number of devices in outage on the g-th iteration to a supposed lambda_m
+            Error(g) = mean(log2(1+SINR) < (Rm/(1-alpha(main)))); % Error taken on the g-th iteration to a supposed lambda_m
+            EDm(g) = sum(log2(1+SINR) < (Rm/(1-alpha(main))));    % Number of devices in outage on the g-th iteration to a supposed lambda_m
         end
     
     end
@@ -77,7 +81,10 @@ for lambda_m = 1:nmax
    
 end
 
-max_devices = lmax;
-outage_mean = ceil(mean(noutage));
+max_devices(main) = lmax;
+outage_mean(main) = ceil(mean(noutage));
 
-fprintf('lambda = %d, EDm = %d \n\n',max_devices,outage_mean)
+fprintf('Iteração %d: ',main)
+fprintf('rBf = %f, lambda = %d, EDm = %d, alpha = %f \n',rBf(main),max_devices(main),outage_mean(main),alpha(main))
+
+end
