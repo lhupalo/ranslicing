@@ -1,10 +1,11 @@
 clear all;
 clc
 
-alpha = linspace(0,0.99,11);
+alpha = linspace(0,0.99,12);
 rBf = zeros(length(alpha));
 max_devices = zeros(length(alpha));
 outage_mean = zeros(length(alpha));
+
 for main = 1:length(alpha)
 
 %% eMBB - Enhanced Mobile BroadBand 
@@ -29,8 +30,8 @@ Rm = 0.04; % Rate for mMTC devices. Fixed to a certain value
 Em = 0.1;  % Maximum error accepted for mMTC service
 
 nmax = 200;  % Number of max iterations, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
-niter = 1e4; % Number of iterations each time that a certain number of devices is active simultaneously
-lmax = 0;
+niter = 1e3; % Number of iterations each time that a certain number of devices is active simultaneously
+lmax = [];
 noutage = [];
 lambda_max = 0;
 
@@ -74,17 +75,24 @@ for lambda_m = 1:nmax
     
     end
     if mean(Error) > Em        % If this supposed lambda_m had a error rate higher than the requirement of service
-        lmax = lambda_m-1;     % we save the number of devices that the channel supports
+        lmax = [lmax (lambda_m-1)];     % we save the number of devices that the channel supports
         noutage = mean(EDm);   
         break;
     end % Otherwise, increment lambda_m and test the error rate
    
 end
 
-max_devices(main) = lmax;
+max_devices(main) = ceil(mean(lmax));
 outage_mean(main) = ceil(mean(noutage));
 
 fprintf('Iteração %d: ',main)
 fprintf('rBf = %f, lambda = %d, EDm = %d, alpha = %f \n',rBf(main),max_devices(main),outage_mean(main),alpha(main))
 
 end
+
+plot(rBf,max_devices,'r','LineWidth',2);
+xlabel('eMBB rate [bps/Hz] ');
+ylabel('mMTC devices active simoutaneously');
+title('H-OMA');
+grid on
+
