@@ -1,6 +1,6 @@
 # Heterogeneous Orthogonal Multiple Access (H-OMA) 
 
-## General Concept of H-OMA
+# General Concept of H-OMA
   The word "heterogeneous" is introduced by professor **Petar Popoviski** on **"5G Wireless Network Slicing for eMBB, URLLC,and mMTC: A Communication-Theoretic View"**.
   
   The 5G wireless systems will support three generic services:
@@ -16,14 +16,19 @@
   
   Basically, the two type of services are allowed to access the Base Station and use the available resources bey the following time-division scheme:
   
-  - Let 
+  Let 
+ 
   <img src="https://latex.codecogs.com/svg.image?\alpha&space;\;&space;\in&space;\;&space;[0,1]" title="\alpha \; \in \; [0,1]" />,
+  
   and &alpha; is the fraction of time when the resources are allocated to mMTC and 1-&alpha; the fraction of time when the resources are allocated to eMBB:
   
   **mMTC**
+  
   <img src="https://latex.codecogs.com/svg.image?\lambda_M&space;=&space;\lambda_M\left&space;(&space;\frac{r_M}{1-\alpha}&space;\right&space;)&space;" title="\lambda_M = \lambda_M\left ( \frac{r_M}{1-\alpha} \right )" />
   
   **eMBB**
+  
+  
   <img src="https://latex.codecogs.com/svg.image?r_{B,f}&space;=&space;\alpha&space;r_{B,f}^{orth}&space;" title="r_{B,f} = \alpha r_{B,f}^{orth}" />
   
   ### Results
