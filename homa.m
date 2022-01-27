@@ -92,7 +92,7 @@ end
 
 plot(rBf,max_devices,'r','LineWidth',2);
 xlabel('eMBB rate [bps/Hz] ');
-ylabel('mMTC devices active simoutaneously');
+ylabel('mMTC devices active simutaneously');
 title('H-OMA');
 grid on
 
