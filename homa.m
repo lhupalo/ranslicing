@@ -6,8 +6,11 @@ rBf = zeros(length(alpha));
 max_devices = zeros(length(alpha));
 outage_mean = zeros(length(alpha));
 
-for main = 1:length(alpha)
 
+u = waitbar(0,'Progresso');
+for main = 1:length(alpha)
+waitbar(main/length(alpha))    
+    
 %% eMBB - Enhanced Mobile BroadBand 
 
 SNR_B_dB = 25;  % Average of SNR in dB
