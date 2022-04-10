@@ -124,5 +124,6 @@ ylim([0 105])
 xlabel('r_b')
 xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
+%title('$\epsilon_B = 0.001$, $\epsilon_M = 0.1$, $\SNR_B = 25$ dB, $\SNR_M = 5$ dB','Interpreter','latex','fontsize',14)
 title('H-NOMA, eMBB and mMTC sharing')
 grid on
