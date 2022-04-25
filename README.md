@@ -1,7 +1,7 @@
 # Heterogeneous Orthogonal Multiple Access (H-OMA) 
 
 ### General Concept of H-OMA
-  The word "heterogeneous" is introduced by professor **Petar Popoviski** on **"5G Wireless Network Slicing for eMBB, URLLC, and mMTC: A Communication-Theoretic View"**.
+  The word "heterogeneous" is introduced by professor **Petar Popovski** on **"5G Wireless Network Slicing for eMBB, URLLC, and mMTC: A Communication-Theoretic View"**.
   
   The 5G wireless systems will support three generic services:
   - mMTC: Massive Machine Type Communications;
