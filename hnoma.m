@@ -26,14 +26,14 @@ Gb = SNR_B*Hb.^2;                             % Channel Gain of the eMBB Device
 
 %% Monte Carlo simulations
 Lambda_m_non=zeros(1,length(rb_HNOMA));
-for x=1:length(rb_HNOMA)
+parfor x=1:length(rb_HNOMA)
     Gb_tar_min=(2^rb_HNOMA(x))-1;  
-    for Am_it=1:Am_max % Number of active mMTC devices
+    for Am=1:Am_max % Number of active mMTC devices
         
-        Am = poissrnd(Am_it);
-        while Am == 0 
-            Am = poissrnd(Am_it);
-        end
+        %Am = poissrnd(Am_it);
+%         while Am == 0 
+%             Am = poissrnd(Am_it);
+%         end
         
         Gm=Gm_max(1:Am,:);
         if Am~=1

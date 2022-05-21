@@ -15,7 +15,7 @@ SNR_M = 10^(SNR_M_db/10);
 Rm = 0.04;                % Rate for mMTC devices. Fixed to a certain value (in bits/s/Hz)
 Em = 0.1;                 % Maximum error accepted for mMTC service
 nmax = 200;               % Number of max devices, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
-niter = 1e2;              % Number of iterations each time that a certain number of devices is active simultaneously
+niter = 1e4;              % Number of iterations each time that a certain number of devices is active simultaneously
 
 for main = 1:length(alpha)  
 
@@ -70,7 +70,7 @@ for main = 1:length(alpha)
             end
 
         end
-        if mean(Error) > Em        % If this supposed lambda_m had a error rate higher than the requirement of service
+        if mean(Error) > Em      % If this supposed lambda_m had a error rate higher than the requirement of service
             lmax = [lmax (lambda_m-1)];     % we save the number of devices that the channel supports
             noutage = mean(EDm);   
             break;
@@ -86,10 +86,10 @@ for main = 1:length(alpha)
 
 end
 
-
+%%
 figure;
 plot(rBf,max_devices,'r','LineWidth',2);
 xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
-title('H-NOMA, eMBB and mMTC sharing')
+title('H-OMA, eMBB and mMTC sharing')
 grid on
