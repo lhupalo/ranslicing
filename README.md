@@ -61,3 +61,4 @@ The decoding is performed as follow:
 
 ### Results
 
+  ![This is an image](https://github.com/lhupalo/ranslicing/blob/master/hnoma.jpg)
