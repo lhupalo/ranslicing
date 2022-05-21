@@ -33,19 +33,16 @@
   
   <img src="https://latex.codecogs.com/svg.image?r_{B,f}&space;=&space;\alpha&space;r_{B,f}^{orth}&space;" title="r_{B,f} = \alpha r_{B,f}^{orth}" />
   
-  ### Results
+  ### Results and conclusions to H-OMA
   
   - The region below the red line represents the pairs of r<sub>B,f</sub> and &lambda;<sub>M</sub> that can be achieved. Therefore, the red line represents the theoretical limit that can be reached using Orthogonal Access in a time-division scheme.
   - The y-axis is the maximum number of mMTC devices that can be active at the same time accessing the BS.
   - The x-axis is the channel use by the eMBB service
-  
-  ![This is an image](https://github.com/lhupalo/ranslicing/blob/master/homa.jpg)
-  
-  ### Conclusions to H-OMA
-  
   - When &alpha; is equal to 0, we have the maximum value of mMTC devices that can access the BS, i.e. the minimum number of mMTC devices in outage. At this scenario, the mMTC devices have all the resources availabe to transmit to the BS, explaining the high value in the graph.
   - When &alpha; is equal to 1, we have the maximum use of channel that can be reached by eMBB users. Similarly to mMTC, in this case all the resources are available to eMBB devices
   - As &alpha; goes from 0 to 1, the time allowed to mMTC transmissions decreseas, forcing the devices to transmit at a faster rate than r<sub>M</sub>
+  
+  ![This is an image](https://github.com/lhupalo/ranslicing/blob/master/homa.jpg)
 
 ## H-NOMA for mMTC and eMBB
 
@@ -59,6 +56,12 @@ The decoding is performed as follow:
 4. If outage occurs on mMTC decoding, the BS try to decode the eMBB device (if it is active). Else, keep mMTC decoding until outage.
 5. Then, if there was an outage for mMTC and the tentative of eMBB decoding has succeded, the BS subtract the eMBB signal from the total received signal and keep decoding the mMTC array. Else, if the eMBB decoding has failed, the process is stopped.
 
-### Results
+### Results and conclusions to H-NOMA
+
+- We can see that, in comparison with orthogonal access (wich the curve is linear), there is a point that maximizes the number of mMTC active devices and the eMBB rate
+- The graph can be divided into 3 regions. 
+- The first region is the pair: low eMBB rates and high number of active mMTC devices. As the eMBB rate rises until a certain value, the number of mMTC active devices remain almost the same, characterizing a "flat" region.
+- On the second region, as the rate rises the number of mMTC active devices drops sharply. Here, the interference on mMTC signals caused by the eMBB device starts to affect the massive communications.
+- On the third region, there is no mMTC device active. The BS can't decode the mMTC traffic on the presence of high rates eMBB active device. 
 
   ![This is an image](https://github.com/lhupalo/ranslicing/blob/master/hnoma.jpg)
