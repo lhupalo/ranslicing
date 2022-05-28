@@ -12,7 +12,7 @@ Em = 1e-1;                        % Reliability requirement for mMTC
 Eb = 1e-3;                        % Reliability requirement for eMBB
 rm = 0.04;                        % Data rate of the mMTC devices [bits/s/Hz]
 Am_max = 200;                     % Maximum number of mMTC devices
-rb_HNOMA = 0:0.1:5;               % Data rate of the eMBB devices [bits/s/Hz]
+rb_HNOMA = 0:0.2:5;               % Data rate of the eMBB devices [bits/s/Hz]
 %% eMBB
 Gb_min = SNR_B*log(1/(1-Eb));                   % Threshold SNR
 Gb_tar_max = SNR_B/expint(Gb_min/SNR_B);        % Target SNR
@@ -28,12 +28,12 @@ Gb = SNR_B*Hb.^2;                             % Channel Gain of the eMBB Device
 Lambda_m_non=zeros(1,length(rb_HNOMA));
 parfor x=1:length(rb_HNOMA)
     Gb_tar_min=(2^rb_HNOMA(x))-1;  
-    for Am=1:Am_max % Number of active mMTC devices
+    for Am_it=1:Am_max % Number of active mMTC devices
         
-        %Am = poissrnd(Am_it);
-%         while Am == 0 
-%             Am = poissrnd(Am_it);
-%         end
+        Am = poissrnd(Am_it);
+        while Am == 0 
+            Am = poissrnd(Am_it);
+        end
         
         Gm=Gm_max(1:Am,:);
         if Am~=1
@@ -116,7 +116,7 @@ end
 rBf = rb_HNOMA;
 maxdevices = Lambda_m_non;
 %save('Results_1_Non.mat','rBf','maxdevices')
-
+%%
 figure
 plot(rBf,maxdevices,'b','LineWidth',2)
 xlim([0 5.5])
