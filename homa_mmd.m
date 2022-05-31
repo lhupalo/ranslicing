@@ -15,14 +15,25 @@ SNR_M = 10^(SNR_M_db/10);
 Rm = 0.04;                % Rate for mMTC devices. Fixed to a certain value (in bits/s/Hz)
 Em = 0.1;                 % Maximum error accepted for mMTC service
 nmax = 200;               % Number of max devices, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
-niter = 1e3;              % Number of iterations each time that a certain number of devices is active simultaneously
+niter = 1e2;              % Number of iterations each time that a certain number of devices is active simultaneously
+Fb = 10;                   % Number of channels MMD
+
 
 for main = 1:length(alpha)  
 
     %% eMBB - Enhanced Mobile BroadBand 
 
-    GBf_min = SNR_B*log(1/(1-eb)); % Minimum value of SNR that allow the device to transmit
-    GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
+    %GBf_min = SNR_B*log(1/(1-eb)); % Minimum value of SNR that allow the device to transmit
+    
+    GBf_min = -(2^(-1/Fb)*SNR_B)*log(1-eb^(1/Fb));
+    %GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
+    
+    for t = 1:Fb  
+        tar_den = ((-1)^(t-1))*(nchoosek(Fb,t)*t)*(expint((t*GBf_min)/(-(2^(-1/Fb)*SNR_B)*log(1-eb^(1/Fb)))));
+    end
+    
+    GBf_tar = (2^(-1/Fb)*SNR_B)*log(1-eb^(1/Fb))/tar_den;
+    
     rBf_orth = log2(1 + GBf_tar); % Maximum eMBB rate for Orthogonal Access
     rBf(main) = alpha(main)*rBf_orth;
 
