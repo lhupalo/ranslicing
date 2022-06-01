@@ -28,14 +28,8 @@ figure;
 plot(rBf_std,lambda_std,'-r*','LineWidth',2);
 hold on
 plot(rBf_mmd4,lambda_mmd4,'-bs','LineWidth',2);
-hold on
-plot(rBf_mmd8,lambda_mmd8,'-xm','LineWidth',2);
-hold on
-plot(rBf_mmd10,lambda_mmd10,'-kp','LineWidth',2);
-hold on
-plot(rBf_mmd12,lambda_mmd12,'-+g','LineWidth',2);
 xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
-legend('H-OMA','MMD H-OMA, F_B = 4','MMD H-OMA, F_B = 8','MMD H-OMA, F_B = 10','MMD H-OMA, F_B = 12')
+legend('H-OMA','H-OMA with MMD, F')
 title('H-OMA, eMBB and mMTC sharing')
 grid on

@@ -15,8 +15,8 @@ SNR_M = 10^(SNR_M_db/10);
 Rm = 0.04;                % Rate for mMTC devices. Fixed to a certain value (in bits/s/Hz)
 Em = 0.1;                 % Maximum error accepted for mMTC service
 nmax = 200;               % Number of max devices, i.e. start testing 1 device and go to the max of 200 trying to access the BS at the same time
-niter = 1e2;              % Number of iterations each time that a certain number of devices is active simultaneously
-Fb = 10;                   % Number of channels MMD
+niter = 1e3;              % Number of iterations each time that a certain number of devices is active simultaneously
+Fb = 12;                   % Number of channels MMD
 
 
 for main = 1:length(alpha)  
