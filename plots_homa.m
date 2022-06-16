@@ -45,3 +45,41 @@ ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize'
 legend('H-OMA','MMD H-OMA, F_B = 4','MMD H-OMA, F_B = 6','MMD H-OMA, F_B = 8','MMD H-OMA, F_B = 10','MMD H-OMA, F_B = 12')
 title('H-OMA, eMBB and mMTC sharing')
 grid on
+
+%% 
+
+clear all;
+clc;
+
+homa_mmdEb104 = load('results_homa_mmd_FB8_e104.mat');
+homa_mmdEb103 = load('results_homa_mmd_FB8_e103.mat');
+homa_mmdEb102 = load('results_homa_mmd_FB8_e102.mat');
+homa_mmdEb101 = load('results_homa_mmd_FB8_e101.mat');
+
+
+rbf_mmdEb104 = homa_mmdEb104.rBf(:,1);
+lambda_mmdEb104= homa_mmdEb104.max_devices(:,1);
+
+rbf_mmdEb103 = homa_mmdEb103.rBf(:,1);
+lambda_mmdEb103= homa_mmdEb103.max_devices(:,1);
+
+rbf_mmdEb102 = homa_mmdEb102.rBf(:,1);
+lambda_mmdEb102= homa_mmdEb102.max_devices(:,1);
+
+rbf_mmdEb101 = homa_mmdEb101.rBf(:,1);
+lambda_mmdEb101= homa_mmdEb101.max_devices(:,1);
+
+
+figure;
+plot(rbf_mmdEb101,lambda_mmdEb101,'-r*','LineWidth',2);
+hold on
+plot(rbf_mmdEb102,lambda_mmdEb102,'-bs','LineWidth',2);
+hold on
+plot(rbf_mmdEb103,lambda_mmdEb103,'-hy','LineWidth',2);
+hold on
+plot(rbf_mmdEb104,lambda_mmdEb104,'-xm','LineWidth',2);
+xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
+ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
+legend('E_b=10e-1','E_b=10e-2','E_b=10e-3','E_b=10e-4')
+title('MMD H-OMA, eMBB and mMTC sharing. F_B = 8')
+grid on

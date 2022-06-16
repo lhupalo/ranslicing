@@ -50,7 +50,6 @@ grid on
 
 hnoma_mmd_FB8_Eb103 = load('results_hnoma_mmd_FB8_e103.mat');
 hnoma_mmd_FB8_Eb101 = load('results_hnoma_mmd_FB8_e101.mat');
-hnoma_mmd_FB8_Eb105 = load('results_hnoma_mmd_FB8_e105.mat');
 
 rBf_Eb103 = hnoma_mmd_FB8_Eb103.rBf;
 lambda_Eb103 = hnoma_mmd_FB8_Eb103.maxdevices;
@@ -65,10 +64,8 @@ figure;
 plot(rBf_Eb101,lambda_Eb101,'-r*','LineWidth',2);
 hold on
 plot(rBf_Eb103,lambda_Eb103,'-bs','LineWidth',2);
-hold on
-plot(rBf_Eb105,lambda_Eb105,'-xm','LineWidth',2);
 xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
-legend('E_b=10e-1','E_b=10e-3','E_b=10e-5')
+legend('E_b=10e-1','E_b=10e-3')
 title('H-OMA, eMBB and mMTC sharing')
 grid on

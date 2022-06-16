@@ -9,11 +9,11 @@ SNR_M = 10^(SNR_M_dB/10);         % Average received SNR of the mMTC devices
 SNR_B_dB = 25;                    % Average received SNR of the eMBB devices [dB]
 SNR_B = 10^(SNR_B_dB/10);         % Average received SNR of the eMBB devices
 Em = 1e-1;                        % Reliability requirement for mMTC
-Eb = 1e-3;                        % Reliability requirement for eMBB
+Eb = 1e-1;                        % Reliability requirement for eMBB
 rm = 0.04;                        % Data rate of the mMTC devices [bits/s/Hz]
 Am_max = 200;                     % Maximum number of mMTC devices
-rb_HNOMA = 0:0.5:5;               % Data rate of the eMBB devices [bits/s/Hz]
-Fb = 12;
+rb_HNOMA = 0:1:5;               % Data rate of the eMBB devices [bits/s/Hz]
+Fb = 8;
 %% eMBB
 %Gb_min = SNR_B*log(1/(1-Eb));                   % Threshold SNR
 Gb_min = -(2^(-1/Fb)*SNR_B)*log(1-Eb^(1/Fb));
