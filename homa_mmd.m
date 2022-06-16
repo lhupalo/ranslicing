@@ -27,11 +27,11 @@ for main = 1:length(alpha)
     
     GBf_min = -(2^(-1/Fb)*SNR_B)*log(1-eb^(1/Fb));
     %GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
-    
+
     for t = 1:Fb  
         tar_den = ((-1)^(t-1))*(nchoosek(Fb,t)*t)*(expint((t*GBf_min)/((2^(-1/Fb)*SNR_B))));
     end
-    
+
     GBf_tar = (2^(-1/Fb)*SNR_B)*log(1-eb^(1/Fb))/tar_den;
     
     rBf_orth = log2(1 + GBf_tar); % Maximum eMBB rate for Orthogonal Access

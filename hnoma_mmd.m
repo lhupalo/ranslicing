@@ -13,22 +13,30 @@ Eb = 1e-3;                        % Reliability requirement for eMBB
 rm = 0.04;                        % Data rate of the mMTC devices [bits/s/Hz]
 Am_max = 200;                     % Maximum number of mMTC devices
 rb_HNOMA = 0:0.5:5;               % Data rate of the eMBB devices [bits/s/Hz]
+Fb = 12;
 %% eMBB
-Gb_min = SNR_B*log(1/(1-Eb));                   % Threshold SNR
-Gb_tar_max = SNR_B/expint(Gb_min/SNR_B);        % Target SNR
+%Gb_min = SNR_B*log(1/(1-Eb));                   % Threshold SNR
+Gb_min = -(2^(-1/Fb)*SNR_B)*log(1-Eb^(1/Fb));
+
+
+for t = 1:Fb  
+    tar_den = ((-1)^(t-1))*(nchoosek(Fb,t)*t)*(expint((t*Gb_min)/((2^(-1/Fb)*SNR_B))));
+end
+
+Gb_tar_max = (2^(-1/Fb)*SNR_B)*log(1-Eb^(1/Fb))/tar_den;
+
+%Gb_tar_max = SNR_B/expint(Gb_min/SNR_B);        % Target SNR
 rb_max = log2(1+Gb_tar_max);                    % Maximum allowed eMBB rate
 
 %% Channel realizations
 Hm_max = raylrnd(1/sqrt(2),Am_max,N);         % Channel coefficients of the mMTC Devices
 Gm_max = SNR_M*(Hm_max.^2);                   % Channel Gains of the mMTC Devices
-Hb = raylrnd(1/sqrt(2),1,N);                  % Channel coefficients of the eMBB Device
-Gb = SNR_B*Hb.^2;                             % Channel Gain of the eMBB Device
 
 %% Monte Carlo simulations
 Lambda_m_non=zeros(1,length(rb_HNOMA));
-parfor x=1:length(rb_HNOMA)
-    Gb_tar_min=(2^rb_HNOMA(x))-1;  
-    for Am=1:Am_max % Number of active mMTC devices
+for x=1:length(rb_HNOMA)
+    Gb_tar_min = (2^rb_HNOMA(x))-1; 
+    for Am = 1:Am_max % Number of active mMTC devices
         
 %         Am = poissrnd(Am_it);
 %         while Am == 0 
