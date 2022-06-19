@@ -2,8 +2,9 @@ clear all
 close all
 clc
 
+tic
 %% Parameters
-N = 1e3;                          % Number of Monte Carlo runs
+N = 10;                          % Number of Monte Carlo runs
 SNR_M_dB = 5;                     % Average received SNR of the mMTC devices [dB]
 SNR_M = 10^(SNR_M_dB/10);         % Average received SNR of the mMTC devices
 SNR_B_dB = 25;                    % Average received SNR of the eMBB devices [dB]
@@ -26,77 +27,91 @@ Gb = SNR_B*Hb.^2;                             % Channel Gain of the eMBB Device
 
 %% Monte Carlo simulations
 Lambda_m_non=zeros(1,length(rb_HNOMA));
-parfor x=1:length(rb_HNOMA)
+for x=1:length(rb_HNOMA)
     Gb_tar_min=(2^rb_HNOMA(x))-1;  
-    for Am=1:Am_max % Number of active mMTC devices
+    for Am_it = 1:Am_max % Number of active mMTC devices
+      
         
-%         Am = poissrnd(Am_it);
-%         while Am == 0 
-%             Am = poissrnd(Am_it);
-%         end
-        
-        Gm=Gm_max(1:Am,:);
-        if Am~=1
-            Gm=sort(Gm,'descend'); % Sort channel gains of the mMTC devices in descending order
-        end
         flag=0;
+        
         for Gb_tar=Gb_tar_min:0.2:Gb_tar_max
             Db=zeros(1,N);
             Dm=zeros(1,N);
             count1=0;
             count2=0;
+            Am_aux = zeros(1,N);
             for j=1:N   % eMBB device is active
-                    count1=count1+1;
-                    for m0=1:Am
-                        if Db(j)==0
-                            if Am==1
-                                Sigma_m=Gm(m0,j)/(1+Gb_tar);         % SINR - mMTC Device
-                            else
-                                Sigma_m=Gm(m0,j)/(1+Gb_tar+sum(Gm(m0+1:Am,j)));         % SINR - mMTC Device
-                            end
-                            if log2(1+Sigma_m)>=rm
-                                Dm(j)=m0;          % Number of corrected decoded mMTC devices
-                            else
-                                Sigma_b=Gb_tar/(1+sum(Gm(m0:Am,j)));                       
-                                if log2(1+Sigma_b)>=rb_HNOMA(x)
-                                    Db(j)=1;
-                                    count2=count2+1;
-                                    
-                                    Sigma_m=Gm(m0,j)/(1+sum(Gm(m0+1:Am,j)));   % SINR - mMTC Device
-                                    if log2(1+Sigma_m)>=rm
-                                        Dm(j)=m0;    % Number of corrected decoded mMTC devices
-                                    else
-                                       break; 
-                                    end
-                                    
-                                else
-                                    break;
-                                end
-                            end                            
+                Am = poissrnd(Am_it);
+                while Am == 0 
+                    Am = poissrnd(Am_it);
+                end 
+                Am_aux(j) = Am;
+                Gm = sort(Gm_max(1:Am,:),'descend');
+                
+                count1=count1+1;
+                
+                for m0=1:Am
+                    
+                  
+                    
+                    if Db(j)==0
+                        if Am==1
+                            Sigma_m=Gm(m0,j)/(1+Gb_tar);         % SINR - mMTC Device
                         else
-                            if Am == 1
-                                Sigma_m = Gm(m0,j);
+                            Sigma_m=Gm(m0,j)/(1+Gb_tar+sum(Gm(m0+1:Am,j)));         % SINR - mMTC Device
+                        end
+                        if log2(1+Sigma_m)>=rm
+                            Dm(j)=m0;          % Number of corrected decoded mMTC devices
+                            %fprintf('64 - Decodificou primeiro mMTC com Am = %d, Am_it = %d \n',Am,Am_it)
+                        else
+                            Sigma_b=Gb_tar/(1+sum(Gm(m0:Am,j)));                       
+                            if log2(1+Sigma_b)>=rb_HNOMA(x)
+                                Db(j)=1;
+                                count2=count2+1;
+
+                                Sigma_m=Gm(m0,j)/(1+sum(Gm(m0+1:Am,j)));   % SINR - mMTC Device
+                                if log2(1+Sigma_m)>=rm
+                                    Dm(j)=m0;    % Number of corrected decoded mMTC devices
+                                else
+                                    %fprintf('74 - Outage mMTC com Am = %d, Am_it = %d \n',Am,Am_it)
+                                   break; 
+                                end
+
                             else
-                                Sigma_m = Gm(m0,j)/(1+sum(Gm(m0+1:Am,j)));
-                            end
-                            if log2(1+Sigma_m) >= rm
-                                Dm(j)=m0;
-                            else
+                                %fprintf('79 - Outage eMBB com Am = %d, Am_it = %d \n',Am,Am_it)
                                 break;
                             end
+                        end                            
+                    else
+                        if Am == 1
+                            Sigma_m = Gm(m0,j);
+                        else
+                            Sigma_m = Gm(m0,j)/(1+sum(Gm(m0+1:Am,j)));
+                        end
+                        if log2(1+Sigma_m) >= rm
+                            Dm(j)=m0;
+                        else
+                            %fprintf('92 - Outage mMTC depois de decodificar eMBB com Am = %d, Am_it = %d \n',Am,Am_it)
+                            break;
                         end
                     end
+                end
 
-                    if m0 == Am && Db(j) == 0
-                        Sigma_b = Gb_tar;
-                        if log2(1+Sigma_b) >= rb_HNOMA(x)
-                           Db(j) = 1;
-                           count2= count2 + 1;
-                        end
+                if m0 == Am && Db(j) == 0
+                    Sigma_b = Gb_tar;
+                    if log2(1+Sigma_b) >= rb_HNOMA(x)
+                       Db(j) = 1;
+                       count2= count2 + 1;
+                       %fprintf('103 - Decodificou eMBB depois do primeiro mMTC com Am = %d, Am_it = %d \n',Am,Am_it)
                     end
+                end
+                %fprintf('Mean(Am_aux) = %f \n',Am_aux)
             end
-            Pr_Em = 1-mean(Dm)/Am;  % Error Probability - mMTC Devices            
+            Pr_Em = 1-mean(Dm)/mean(Am_aux);  % Error Probability - mMTC Devices            
             Pr_Eb = 1-count2/count1;
+            
+            %fprintf('Am_it = %d, Am = %d, mean(Dm) = %f, Pr_Em = %f, Pr_Eb = %f \n',Am_it,Am,mean(Dm),Pr_Em, Pr_Eb);
+            %fprintf('********************************** \n')
             if Pr_Em <= Em
                 if Pr_Eb <= Eb
                     Lambda_m_non(x) = Am;
@@ -111,6 +126,8 @@ parfor x=1:length(rb_HNOMA)
             break
         end
     end
+    fprintf('Iteração %d \t',x);
+    fprintf('Lambda = %d \n',Lambda_m_non(x));
 end
 
 rBf = rb_HNOMA;
@@ -126,3 +143,5 @@ xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
 title('H-NOMA, eMBB and mMTC sharing')
 grid on
+
+toc
