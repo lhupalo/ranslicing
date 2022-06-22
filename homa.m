@@ -86,6 +86,8 @@ for main = 1:length(alpha)
 
 end
 
+%save('homa_std.mat','rBf','max_devices')
+
 %%
 figure;
 plot(rBf,max_devices,'r','LineWidth',2);
