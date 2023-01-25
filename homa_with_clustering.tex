@@ -1,0 +1,129 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\definecolor{mycolor1}{rgb}{1.00000,0.00000,1.00000}%
+\definecolor{mycolor2}{rgb}{0.49400,0.18400,0.55600}%
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=1,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\alpha$},
+ymin=0,
+ymax=180,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\lambda_M$ [number of active devices]},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={H-OMA with clustering procedure},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=red, line width=2.0pt, mark=o, mark options={solid, red}]
+  table[row sep=crcr]{%
+0	94\\
+0.099	85\\
+0.198	74\\
+0.297	63\\
+0.396	52\\
+0.495	42\\
+0.594	33\\
+0.693	22\\
+0.792	14\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA}
+
+\addplot [color=blue, line width=2.0pt, mark=+, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	177\\
+0.099	155\\
+0.198	133\\
+0.297	110\\
+0.396	0\\
+0.495	0\\
+0.594	0\\
+0.693	0\\
+0.792	0\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA with [1.9 0.1]}
+
+\addplot [color=mycolor1, line width=2.0pt, mark=x, mark options={solid, mycolor1}]
+  table[row sep=crcr]{%
+0	158\\
+0.099	140\\
+0.198	123\\
+0.297	105\\
+0.396	88\\
+0.495	69\\
+0.594	50\\
+0.693	0\\
+0.792	0\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA with [1.8 0.2]}
+
+\addplot [color=black, line width=2.0pt, mark=square, mark options={solid, black}]
+  table[row sep=crcr]{%
+0	144\\
+0.099	128\\
+0.198	113\\
+0.297	96\\
+0.396	80\\
+0.495	64\\
+0.594	48\\
+0.693	32\\
+0.792	0\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA with [1.7 0.3]}
+
+\addplot [color=green, line width=2.0pt, mark=diamond, mark options={solid, green}]
+  table[row sep=crcr]{%
+0	133\\
+0.099	119\\
+0.198	104\\
+0.297	90\\
+0.396	75\\
+0.495	61\\
+0.594	47\\
+0.693	32\\
+0.792	0\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA with [1.6 0.4]}
+
+\addplot [color=mycolor2, line width=2.0pt, mark=triangle, mark options={solid, mycolor2}]
+  table[row sep=crcr]{%
+0	125\\
+0.099	113\\
+0.198	99\\
+0.297	85\\
+0.396	71\\
+0.495	58\\
+0.594	44\\
+0.693	30\\
+0.792	17\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA with [1.5 0.5]}
+
+\end{axis}
+\end{tikzpicture}%

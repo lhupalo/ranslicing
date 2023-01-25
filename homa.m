@@ -1,13 +1,13 @@
 clear all;
 clc
 
-alpha = linspace(0,0.99,5);
+alpha = linspace(0,0.99,11);
 rBf = zeros(length(alpha));
 max_devices = zeros(length(alpha));
 outage_mean = zeros(length(alpha));
 
 %% Simulation Parameters
-SNR_B_dB = 25;            % Average of SNR of eMBB devices in dB
+SNR_B_dB = 35;            % Average of SNR of eMBB devices in dB
 SNR_B = 10^(SNR_B_dB/10);
 eb = 0.001;               % Maximum error accepted for eMBB service
 SNR_M_db = 5;             % Average SNR of mMTC devices in dB
@@ -72,8 +72,10 @@ for main = 1:length(alpha)
         end
         if mean(Error) > Em      % If this supposed lambda_m had a error rate higher than the requirement of service
             lmax = [lmax (lambda_m-1)];     % we save the number of devices that the channel supports
-            noutage = mean(EDm);   
+            noutage = mean(EDm);
+        
             break;
+           
         end % Otherwise, increment lambda_m and test the error rate
 
     end

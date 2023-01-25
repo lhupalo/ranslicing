@@ -24,17 +24,24 @@ for ch = 1:length(Fb)
     for main = 1:length(alpha)  
 
         %% eMBB - Enhanced Mobile BroadBand 
-
-        %GBf_min = SNR_B*log(1/(1-eb)); % Minimum value of SNR that allow the device to transmit
-
-        GBf_min = -(2^(-1/Fb(ch))*SNR_B)*log(1-eb^(1/Fb(ch)));
+        
+        gammaB_aux = (2^(-1/Fb(ch)))*SNR_B;
+        GBf_min = -gammaB_aux*log(1-eb^(1/Fb(ch)));
         %GBf_tar = SNR_B/(expint(GBf_min/SNR_B)); % Target value of SNR
-
-        for t = 1:Fb(ch)  
-            tar_den = ((-1)^(t-1))*(nchoosek(Fb(ch),t)*t)*(expint((t*GBf_min)/((2^(-1/Fb(ch))*SNR_B))));
+        
+        tar_den = 0;
+        for t = 1:Fb(ch)
+            % Denominador da função (12) usando expint:
+            %tar_den = ((-1)^(t-1))*(nchoosek(Fb(ch),t)*t)*(expint((t*GBf_min)/(gammaB_aux)));
+            
+            % Denominador da função (12) usando gammainc:
+            %tar_den_aux = ((-1)^(t-1))*nchoosek(Fb(ch),t)*t*(gammainc(0,(t*GBf_min)/(gammaB_aux)));
+            tar_den_aux = ((-1)^(t-1))*nchoosek(Fb(ch),t)*t*(expint((t*GBf_min)/(gammaB_aux)));
+            tar_den = tar_den + tar_den_aux;
         end
-
-        GBf_tar = (2^(-1/Fb(ch))*SNR_B)*log(1-eb^(1/Fb(ch)))/tar_den;
+        
+        % Fim cálculo SNR alvo (função (12))
+        GBf_tar = (gammaB_aux)/tar_den;
 
         rBf_orth = log2(1 + GBf_tar); % Maximum eMBB rate for Orthogonal Access
         rBf(main) = alpha(main)*rBf_orth;
@@ -88,9 +95,10 @@ for ch = 1:length(Fb)
                 noutage = mean(EDm);   
                 break;
             end % Otherwise, increment lambda_m and test the error rate
-
+            
         end
-
+        
+        
         max_devices(main) = ceil(mean(lmax));
         outage_mean(main) = ceil(mean(noutage));
         
@@ -99,6 +107,7 @@ for ch = 1:length(Fb)
         %fprintf('Iteração %d: ',main)
         %fprintf('rBf = %f, lambda = %d, EDm = %d, alpha = %f \n',rBf(main),max_devices(main),outage_mean(main),alpha(main))
     end
+    fprintf('Fb = %d, GBf_min = %f, GBf_tar = %f \n',Fb(ch),GBf_min, GBf_tar)
   
 end
 

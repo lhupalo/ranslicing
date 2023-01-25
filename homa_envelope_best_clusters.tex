@@ -1,0 +1,62 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=1,
+xlabel style={font=\color{white!15!black}},
+xlabel={$\alpha$},
+ymin=0,
+ymax=180,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\lambda_M$ [number of active devices]},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={H-OMA envelope for the best clusters},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=red, line width=2.0pt, mark=o, mark options={solid, red}]
+  table[row sep=crcr]{%
+0	94\\
+0.099	85\\
+0.198	74\\
+0.297	63\\
+0.396	52\\
+0.495	42\\
+0.594	33\\
+0.693	22\\
+0.792	14\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA without clustering}
+
+\addplot [color=blue, line width=2.0pt, mark=+, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	177\\
+0.099	155\\
+0.198	133\\
+0.297	110\\
+0.396	88\\
+0.495	69\\
+0.594	50\\
+0.693	32\\
+0.792	17\\
+0.891	0\\
+0.99	0\\
+};
+\addlegendentry{H-OMA envelope with best clusters}
+
+\end{axis}
+\end{tikzpicture}%
