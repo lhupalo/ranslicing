@@ -1,0 +1,76 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=10,
+xlabel style={font=\color{white!15!black}},
+xlabel={$r_B$ [bits/s/Hz]},
+ymin=0,
+ymax=180,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\lambda_M$ [number of active devices]},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=red, line width=2.0pt, mark=o, mark options={solid, red}]
+  table[row sep=crcr]{%
+0	176\\
+0.255789331246293	154\\
+0.511578662492587	133\\
+0.76736799373888	110\\
+1.02315732498517	88\\
+1.27894665623147	69\\
+1.53473598747776	48\\
+1.79052531872405	32\\
+2.04631464997035	16\\
+2.30210398121664	0\\
+2.55789331246293	0\\
+};
+\addlegendentry{$\Gamma{}_\text{B}\text{=15 dB}$}
+
+\addplot [color=blue, line width=2.0pt, mark=+, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	177\\
+0.561426620011567	155\\
+1.12285324002313	133\\
+1.6842798600347	110\\
+2.24570648004627	88\\
+2.80713310005783	69\\
+3.3685597200694	50\\
+3.92998634008097	32\\
+4.49141296009253	17\\
+5.0528395801041	0\\
+5.61426620011567	0\\
+};
+\addlegendentry{$\Gamma{}_\text{B}\text{=25 dB}$}
+
+\addplot [color=black, line width=2.0pt, mark=square, mark options={solid, black}]
+  table[row sep=crcr]{%
+0	178\\
+0.887751944720304	155\\
+1.77550388944061	133\\
+2.66325583416091	106\\
+3.55100777888122	87\\
+4.43875972360152	69\\
+5.32651166832182	50\\
+6.21426361304213	33\\
+7.10201555776243	17\\
+7.98976750248274	0\\
+8.87751944720304	0\\
+};
+\addlegendentry{$\Gamma{}_\text{B}\text{=35 dB}$}
+
+\end{axis}
+\end{tikzpicture}%

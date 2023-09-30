@@ -2,12 +2,13 @@ clear all;
 clc
 
 alpha = linspace(0,0.99,11);
+% alpha = 0:0.05:1;
 rBf = zeros(length(alpha));
 max_devices = zeros(length(alpha));
 outage_mean = zeros(length(alpha));
 
 %% Simulation Parameters
-SNR_B_dB = 35;            % Average of SNR of eMBB devices in dB
+SNR_B_dB = 20;            % Average of SNR of eMBB devices in dB
 SNR_B = 10^(SNR_B_dB/10);
 eb = 0.001;               % Maximum error accepted for eMBB service
 SNR_M_db = 5;             % Average SNR of mMTC devices in dB
@@ -30,7 +31,10 @@ for main = 1:length(alpha)
     lmax = [];
     noutage = [];
     lambda_max = 0;
-
+    
+    counter = 0;
+    scaling = [0.5 1.5]; % Scaling vector
+    
     for lambda_m = 1:nmax
 
         h = [];
@@ -46,7 +50,9 @@ for main = 1:length(alpha)
 
             for j = 1:lambda
                 h(j,1) = sqrt(0.5)*abs(randn+1i*randn);   % One Rayleigh fading channel for each device
-                SNR_inst(j,1) = SNR_M*h(j)^2;             % Instantaneous SNR seen at the BS for each device
+                index = randi(length(scaling));
+                scale_factor = scaling(index);
+                SNR_inst(j,1) = scale_factor*SNR_M*h(j)^2;             % Instantaneous SNR seen at the BS for each device
                 instSNRsorted = sort(SNR_inst,'descend'); % Descending instantaneous SNRs seen at the BS to decode properly
             end
 
@@ -68,13 +74,15 @@ for main = 1:length(alpha)
                 Error(g) = mean(log2(1+SINR) < (Rm/(1-alpha(main)))); % Error taken on the g-th iteration to a supposed lambda_m
                 EDm(g) = sum(log2(1+SINR) < (Rm/(1-alpha(main))));    % Number of devices in outage on the g-th iteration to a supposed lambda_m
             end
-
         end
         if mean(Error) > Em      % If this supposed lambda_m had a error rate higher than the requirement of service
-            lmax = [lmax (lambda_m-1)];     % we save the number of devices that the channel supports
-            noutage = mean(EDm);
-        
-            break;
+            
+            if mean(EDm) > 10
+                lmax = [lmax (lambda_m-1)];     % we save the number of devices that the channel supports
+                noutage = mean(EDm);   
+                break;
+            end
+   
            
         end % Otherwise, increment lambda_m and test the error rate
 
@@ -88,12 +96,11 @@ for main = 1:length(alpha)
 
 end
 
-%save('homa_std.mat','rBf','max_devices')
 
 %%
 figure;
 plot(rBf,max_devices,'r','LineWidth',2);
 xlabel('$r_B$ [bits/s/Hz]','Interpreter','latex','fontsize',12)
 ylabel('$\lambda_M$ [number of active devices]','Interpreter','latex','fontsize',12)
-title('H-OMA, eMBB and mMTC sharing')
+title('H-NOMA, eMBB and mMTC sharing')
 grid on

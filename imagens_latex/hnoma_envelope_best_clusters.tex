@@ -1,0 +1,92 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\begin{tikzpicture}
+
+\begin{axis}[%
+width=4.521in,
+height=3.566in,
+at={(0.758in,0.481in)},
+scale only axis,
+xmin=0,
+xmax=4,
+xlabel style={font=\color{white!15!black}},
+xlabel={$r_B$ [bits/s/Hz]},
+ymin=0,
+ymax=160,
+ylabel style={font=\color{white!15!black}},
+ylabel={$\lambda_M$ [number of active devices]},
+axis background/.style={fill=white},
+title style={font=\bfseries},
+title={H-NOMA envelope for the best clusters},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot [color=red, line width=2.0pt, mark=o, mark options={solid, red}]
+  table[row sep=crcr]{%
+0	93\\
+0.2	82\\
+0.4	79\\
+0.6	78\\
+0.8	77\\
+1	77\\
+1.2	76\\
+1.4	76\\
+1.6	72\\
+1.8	54\\
+2	38\\
+2.2	27\\
+2.4	20\\
+2.6	14\\
+2.8	10\\
+3	7\\
+3.2	4\\
+3.4	0\\
+3.6	0\\
+3.8	0\\
+4	0\\
+4.2	0\\
+4.4	0\\
+4.6	0\\
+4.8	0\\
+5	0\\
+};
+\addlegendentry{H-NOMA without clustering}
+
+\addplot [color=blue, line width=2.0pt, mark=diamond, mark options={solid, blue}]
+  table[row sep=crcr]{%
+0	151\\
+0.2	135\\
+0.4	118\\
+0.6	109\\
+0.8	100\\
+1	96\\
+1.2	89\\
+1.4	79\\
+1.6	72\\
+1.8	54\\
+2	38\\
+2.2	27\\
+2.4	20\\
+2.6	14\\
+2.8	10\\
+3	7\\
+3.2	4\\
+3.4	0\\
+3.6	0\\
+3.8	0\\
+4	0\\
+4.2	0\\
+4.4	0\\
+4.6	0\\
+4.8	0\\
+5	0\\
+};
+\addlegendentry{H-NOMA envelope with best clusters}
+
+\end{axis}
+\end{tikzpicture}%
